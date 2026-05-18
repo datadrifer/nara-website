@@ -1,0 +1,818 @@
+/* ─── /nara — long-scroll deck primitives ──────────────────────────────
+ * Extends slide.css (slide-scope). All tokens via CSS vars only.
+ * Every section is a viewport-height block on white with PP type.
+ * ──────────────────────────────────────────────────────────────────── */
+
+.nara-scroll {
+  background: var(--slide-bg);
+  color: var(--slide-ink);
+  font-family: var(--font-mono);
+  min-height: 100vh;
+}
+
+/* Faint grid background, mirrors the deck's notebook texture */
+.nara-scroll .nara-grid {
+  background-image:
+    linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* ─── Section shell ─────────────────────────────────────────────────── */
+
+.nara-scroll .nara-section {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 8vh 6vw;
+  box-sizing: border-box;
+  border-bottom: 1px solid var(--slide-rule);
+}
+
+.nara-scroll .nara-section--tight {
+  min-height: auto;
+  padding: 12vh 6vw;
+}
+
+.nara-scroll .nara-section--dark {
+  background: var(--slide-ink);
+  color: var(--slide-bg);
+  border-bottom-color: var(--slide-ink);
+}
+
+.nara-scroll .nara-section--dark * {
+  color: var(--slide-bg);
+}
+
+/* Section corner tag (top-right) */
+.nara-scroll .nara-tag {
+  position: absolute;
+  top: 4vh;
+  right: 6vw;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--slide-ink-3);
+}
+
+.nara-scroll .nara-section--dark .nara-tag {
+  color: rgba(255, 255, 255, 0.62);
+}
+
+/* Section number marker (top-left) */
+.nara-scroll .nara-mark {
+  position: absolute;
+  top: 4vh;
+  left: 6vw;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--slide-ink-3);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nara-scroll .nara-mark::before {
+  content: "";
+  display: inline-block;
+  width: 18px;
+  height: 1.5px;
+  background: var(--slide-ink-3);
+}
+
+/* ─── Sticky deck nav ──────────────────────────────────────────────── */
+
+.nara-scroll .nara-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 24px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--slide-rule);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.nara-scroll .nara-nav__brand {
+  font-family: var(--font-display);
+  font-size: 18px;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: var(--slide-ink);
+  text-decoration: none;
+}
+
+.nara-scroll .nara-nav__links {
+  display: flex;
+  gap: 22px;
+}
+
+.nara-scroll .nara-nav__link {
+  color: var(--slide-ink-3);
+  text-decoration: none;
+  transition: color 0.12s;
+}
+
+.nara-scroll .nara-nav__link:hover {
+  color: var(--slide-ink);
+}
+
+/* ─── Hero ─────────────────────────────────────────────────────────── */
+
+.nara-scroll .nara-hero {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 4vh;
+}
+
+.nara-scroll .nara-hero__mark {
+  font-family: var(--font-display);
+  font-size: clamp(96px, 16vw, 240px);
+  line-height: 0.9;
+  letter-spacing: 0.02em;
+  color: var(--slide-ink);
+  margin: 0;
+  position: relative;
+}
+
+.nara-scroll .nara-hero__mark::before,
+.nara-scroll .nara-hero__mark::after {
+  content: "✦";
+  font-size: 0.18em;
+  position: absolute;
+  color: var(--slide-ink);
+}
+
+.nara-scroll .nara-hero__mark::before {
+  top: 0.05em;
+  left: -0.18em;
+}
+
+.nara-scroll .nara-hero__mark::after {
+  top: 0.05em;
+  right: -0.18em;
+}
+
+.nara-scroll .nara-hero__tag {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 3vw, 44px);
+  color: var(--slide-ink);
+  margin: 0;
+}
+
+.nara-scroll .nara-hero__meta {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 4vh;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--slide-ink-3);
+}
+
+.nara-scroll .nara-hero__meta-divider {
+  width: 24px;
+  height: 1px;
+  background: var(--slide-ink-3);
+}
+
+/* ─── Section header ───────────────────────────────────────────────── */
+
+.nara-scroll .nara-header {
+  margin-bottom: 6vh;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 80ch;
+}
+
+.nara-scroll .nara-eyebrow {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--slide-ink-3);
+  margin: 0;
+}
+
+.nara-scroll .nara-title {
+  font-family: var(--font-display);
+  font-size: clamp(48px, 7vw, 128px);
+  line-height: 0.92;
+  letter-spacing: 0;
+  color: var(--slide-ink);
+  margin: 0;
+}
+
+.nara-scroll .nara-title--mono {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: clamp(28px, 3.6vw, 56px);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  line-height: 0.9;
+}
+
+.nara-scroll .nara-prose {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: clamp(14px, 1.1vw, 18px);
+  line-height: 1.55;
+  color: var(--slide-ink);
+  max-width: 78ch;
+}
+
+.nara-scroll .nara-prose b {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  background: var(--slide-ink);
+  color: var(--slide-bg);
+  padding: 0 4px;
+}
+
+.nara-scroll .nara-prose--serif {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(20px, 1.8vw, 32px);
+  line-height: 1.3;
+  max-width: 38ch;
+}
+
+/* ─── Stat / claim card with offset shadow ─────────────────────────── */
+
+.nara-scroll .nara-card {
+  position: relative;
+  background: var(--slide-bg);
+  border: 1.5px solid var(--slide-ink);
+  padding: 4vh 3vw;
+  box-shadow: 8px 8px 0 0 var(--slide-ink);
+  display: flex;
+  flex-direction: column;
+  gap: 3vh;
+}
+
+.nara-scroll .nara-card__eyebrow {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--slide-ink);
+  margin: 0;
+}
+
+.nara-scroll .nara-card__stat {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: clamp(96px, 12vw, 200px);
+  line-height: 0.85;
+  letter-spacing: -0.02em;
+  color: var(--slide-ink);
+  margin: 0;
+}
+
+.nara-scroll .nara-card__stat sup {
+  font-size: 0.42em;
+  vertical-align: top;
+  line-height: 1;
+}
+
+.nara-scroll .nara-card__body {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(20px, 1.9vw, 32px);
+  line-height: 1.2;
+  color: var(--slide-ink);
+  margin: 0;
+}
+
+.nara-scroll .nara-card__source {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--slide-ink-3);
+  margin: 0;
+  padding-top: 2vh;
+  border-top: 1px solid var(--slide-rule);
+}
+
+/* ─── Two-up / three-up grids ──────────────────────────────────────── */
+
+.nara-scroll .nara-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4vw;
+  align-items: stretch;
+}
+
+.nara-scroll .nara-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 3vw;
+  align-items: stretch;
+}
+
+@media (max-width: 900px) {
+  .nara-scroll .nara-grid-2,
+  .nara-scroll .nara-grid-3 {
+    grid-template-columns: 1fr;
+    gap: 6vh;
+  }
+}
+
+/* ─── Photo plate (PDF-extracted image with NaRa frame) ────────────── */
+
+.nara-scroll .nara-plate {
+  position: relative;
+  display: block;
+  border: 1.5px solid var(--slide-ink);
+  background: var(--slide-bg);
+  box-shadow: 8px 8px 0 0 var(--slide-ink);
+  overflow: hidden;
+}
+
+.nara-scroll .nara-plate img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.nara-scroll .nara-plate__caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--slide-ink);
+  color: var(--slide-bg);
+  padding: 8px 14px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* ─── Timeline rail ────────────────────────────────────────────────── */
+
+.nara-scroll .nara-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 6vh;
+}
+
+.nara-scroll .nara-timeline__row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+.nara-scroll .nara-timeline__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.nara-scroll .nara-timeline__name {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 4.5vw, 72px);
+  line-height: 0.9;
+  margin: 0;
+  color: var(--slide-ink);
+}
+
+.nara-scroll .nara-timeline__span {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 3.8vw, 56px);
+  line-height: 0.9;
+  margin: 0;
+  color: var(--slide-ink);
+}
+
+.nara-scroll .nara-timeline__span--unknown {
+  font-style: normal;
+}
+
+.nara-scroll .nara-timeline__rail {
+  position: relative;
+  height: 2px;
+  background: var(--slide-ink);
+  margin: 18px 0 14px;
+}
+
+.nara-scroll .nara-timeline__rail--dashed {
+  background: transparent;
+  border-top: 2px dashed var(--slide-ink-3);
+  height: 0;
+}
+
+.nara-scroll .nara-timeline__rail::before,
+.nara-scroll .nara-timeline__rail::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  background: var(--slide-ink);
+  transform: translateY(-50%);
+}
+
+.nara-scroll .nara-timeline__rail::before {
+  left: 0;
+}
+
+.nara-scroll .nara-timeline__rail::after {
+  right: 0;
+}
+
+.nara-scroll .nara-timeline__rail-mid {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 9px;
+  height: 9px;
+  background: var(--slide-ink);
+  transform: translate(-50%, -50%);
+}
+
+.nara-scroll .nara-timeline__beats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(14px, 1.2vw, 18px);
+  line-height: 1.25;
+  color: var(--slide-ink);
+}
+
+.nara-scroll .nara-timeline__beats > :nth-child(2) {
+  text-align: center;
+}
+
+.nara-scroll .nara-timeline__beats > :nth-child(3) {
+  text-align: right;
+}
+
+/* ─── Quote card ───────────────────────────────────────────────────── */
+
+.nara-scroll .nara-quote {
+  position: relative;
+  background: var(--slide-bg);
+  border: 1.5px solid var(--slide-ink);
+  padding: 4vh 3vw;
+  box-shadow: 8px 8px 0 0 var(--slide-ink);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 4vh;
+}
+
+.nara-scroll .nara-quote__marks {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 1;
+  color: var(--slide-ink);
+}
+
+.nara-scroll .nara-quote__body {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(18px, 1.6vw, 26px);
+  line-height: 1.3;
+  color: var(--slide-ink);
+  margin: 0;
+}
+
+.nara-scroll .nara-quote__body--pull {
+  font-family: var(--font-display);
+  text-transform: none;
+}
+
+.nara-scroll .nara-quote__attr {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-top: 2vh;
+  border-top: 1px solid var(--slide-rule);
+}
+
+.nara-scroll .nara-quote__avatar {
+  width: 44px;
+  height: 44px;
+  border: 1.5px solid var(--slide-ink);
+  background: var(--slide-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  color: var(--slide-ink);
+  flex-shrink: 0;
+}
+
+.nara-scroll .nara-quote__attr-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nara-scroll .nara-quote__name {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--slide-ink);
+}
+
+.nara-scroll .nara-quote__role {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--slide-ink-3);
+}
+
+/* ─── Commitment list (Restraint / Open / Non-random / Friction) ───── */
+
+.nara-scroll .nara-commit {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--slide-rule);
+}
+
+.nara-scroll .nara-commit__row {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  align-items: baseline;
+  gap: 32px;
+  padding: 4vh 0;
+  border-bottom: 1px solid var(--slide-rule);
+}
+
+.nara-scroll .nara-commit__num {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: clamp(12px, 1vw, 14px);
+  letter-spacing: 0.18em;
+  color: var(--slide-ink-3);
+}
+
+.nara-scroll .nara-commit__name {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 6vw, 96px);
+  line-height: 0.92;
+  margin: 0;
+  color: var(--slide-ink);
+}
+
+/* ─── Boxed list (Nara is / isn't) ─────────────────────────────────── */
+
+.nara-scroll .nara-isnt {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  gap: 0;
+  align-items: stretch;
+  border-top: 1.5px solid var(--slide-ink);
+}
+
+.nara-scroll .nara-isnt__rule {
+  background: var(--slide-ink);
+}
+
+.nara-scroll .nara-isnt__col {
+  padding: 4vh 3vw;
+  display: flex;
+  flex-direction: column;
+  gap: 3vh;
+}
+
+.nara-scroll .nara-isnt__head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.nara-scroll .nara-isnt__tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid var(--slide-ink);
+  padding: 4px 10px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--slide-ink);
+}
+
+.nara-scroll .nara-isnt__title {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3vw, 48px);
+  line-height: 1;
+  margin: 0;
+  color: var(--slide-ink);
+}
+
+.nara-scroll .nara-isnt__item {
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  gap: 12px;
+  align-items: baseline;
+  padding: 2vh 0;
+  border-bottom: 1px solid var(--slide-rule);
+}
+
+.nara-scroll .nara-isnt__num {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--slide-ink-3);
+}
+
+.nara-scroll .nara-isnt__text {
+  font-family: var(--font-display);
+  font-size: clamp(18px, 1.6vw, 26px);
+  line-height: 1.2;
+  color: var(--slide-ink);
+  margin: 0;
+}
+
+.nara-scroll .nara-isnt__text--strike {
+  color: var(--slide-ink-3);
+  text-decoration: line-through;
+}
+
+/* ─── System map (vicious / reflective cycle) ──────────────────────── */
+
+.nara-scroll .nara-sysmap {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1.4fr 1fr;
+  gap: 4vw;
+  align-items: center;
+  padding: 4vh 0;
+}
+
+.nara-scroll .nara-sysmap__col {
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+  align-items: center;
+  text-align: center;
+}
+
+.nara-scroll .nara-sysmap__node {
+  background: var(--slide-bg);
+  border: 1.5px solid var(--slide-ink);
+  box-shadow: 5px 5px 0 0 var(--slide-ink);
+  padding: 14px 18px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--slide-ink);
+  min-width: 180px;
+  text-align: center;
+}
+
+.nara-scroll .nara-sysmap__node--dark {
+  background: var(--slide-ink);
+  color: var(--slide-bg);
+}
+
+.nara-scroll .nara-sysmap__arrow {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--slide-ink);
+}
+
+.nara-scroll .nara-sysmap__edge-label {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--slide-ink-3);
+}
+
+.nara-scroll .nara-sysmap__cycle-label {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(14px, 1.2vw, 20px);
+  letter-spacing: 0.04em;
+  color: var(--slide-ink-3);
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+/* ─── Glyph inventory grid (deck slide 32a) ────────────────────────── */
+
+.nara-scroll .nara-glyphs {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  border: 1.5px solid var(--slide-ink);
+}
+
+.nara-scroll .nara-glyphs__cell {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid var(--slide-rule);
+  border-bottom: 1px solid var(--slide-rule);
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3vw, 56px);
+  color: var(--slide-ink);
+  line-height: 1;
+}
+
+.nara-scroll .nara-glyphs__cell:nth-child(7n) {
+  border-right: none;
+}
+
+/* ─── Final wordmark ───────────────────────────────────────────────── */
+
+.nara-scroll .nara-final {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2vh;
+  text-align: center;
+}
+
+.nara-scroll .nara-final__mark {
+  font-family: var(--font-display);
+  font-size: clamp(120px, 18vw, 280px);
+  line-height: 0.9;
+  letter-spacing: 0.02em;
+  color: var(--slide-ink);
+  position: relative;
+  margin: 0;
+}
+
+.nara-scroll .nara-final__tag {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2.4vw, 36px);
+  color: var(--slide-ink);
+  margin: 0;
+}
+
+/* ─── References ───────────────────────────────────────────────────── */
+
+.nara-scroll .nara-refs {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 4vh;
+  border-top: 1.5px solid var(--slide-ink);
+}
+
+.nara-scroll .nara-refs__item {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 11px;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  color: var(--slide-ink);
+  padding: 2px 0;
+}
+
+.nara-scroll .nara-refs__item span {
+  color: var(--slide-ink-3);
+}
