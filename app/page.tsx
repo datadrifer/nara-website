@@ -1,5 +1,5 @@
 import { colors, fonts } from "../ds-nara/tokens";
-import Landing from "../ds-nara/landing";
+import ArchitectureV5Page from "../ds-nara/architecture-v5";
 import "../ds-nara/cockpit-ds.css";
 
 export default function Home() {
@@ -14,7 +14,7 @@ export default function Home() {
         fontFamily: fonts.serif,
       }}
     >
-      <Landing />
+      <ArchitectureV5Page />
     </div>
   );
 }
